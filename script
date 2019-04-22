@@ -1,0 +1,94 @@
+#-*-coding:utf-8-*-
+
+'''
+get3L()现在有两个杯子，一个能装水 6L，一个能装水 5L，不用其他杯子的情况下，怎么倒出 3L 的水？
+get2L()现在有两个杯子，一个能装水 6L，一个能装水 5L，不用其他杯子的情况下，怎么倒出 2L 的水？
+'''
+
+class cupGame:
+
+    def __init__(self):
+        print '0. 初始状态'
+        self.cupA = {'stock': 0, 'volume': 6}
+        self.cupB = {'stock': 0, 'volume': 5}
+        self.logVolume()
+
+    def logVolume(self):
+        self.process_bar(self.cupA['stock'],start_str='A杯当前水量:%sL '%self.cupA['stock'],total_length=self.cupA['volume'])
+        self.process_bar(self.cupB['stock'], start_str='B杯当前水量:%sL ' % self.cupB['stock'],
+                         total_length=self.cupB['volume'])
+        print "------------------------------------------------------------------------------------------------------------\r\n",
+
+    def process_bar(self,percent, start_str='', end_str='', total_length=0):
+        bar = ''.join(['#'] * int(percent))
+        bar = '\r' + start_str + '['.format(percent) + bar.ljust(total_length) + ']' + end_str
+        print(bar)
+
+    def get3L(self):
+        print '1. B加满'
+        self.cupB['stock'] = self.cupB['volume']
+        self.logVolume()
+
+        print '2. B倒入A'
+        self.cupA['stock'] = self.cupB['stock']
+        self.cupB['stock'] = 0
+        self.logVolume()
+
+        print '3. B再加满'
+        self.cupB['stock'] = self.cupB['volume']
+        self.logVolume()
+
+        print '4. B倒入A，加满A'
+        if self.cupB['stock'] > (self.cupA['volume'] - self.cupA['stock']):
+            #异常逻辑需补充
+            self.cupB['stock'] = self.cupB['stock'] - (self.cupA['volume'] - self.cupA['stock'])
+            self.cupA['stock'] = self.cupA['stock'] + (self.cupA['volume'] - self.cupA['stock'])
+            self.logVolume()
+
+        print '5. A清空，B倒入A'
+        self.cupA['stock'] = 0
+        self.cupA['stock'] = self.cupB['stock']
+        self.cupB['stock'] = 0
+        self.logVolume()
+
+        print '6.B倒满'
+        self.cupB['stock'] = self.cupB['volume']
+        self.logVolume()
+
+        print '7.B倒入A，加满A'
+        if self.cupB['stock'] > (self.cupA['volume'] - self.cupA['stock']):
+            self.cupB['stock'] = self.cupB['stock'] - (self.cupA['volume'] - self.cupA['stock'])
+            self.cupA['stock'] = self.cupA['stock'] + (self.cupA['volume'] - self.cupA['stock'])
+            self.logVolume()
+
+    def get2L(self):
+        print '1. A加满'
+        self.cupA['stock'] = self.cupA['volume']
+        self.logVolume()
+
+        print '2. A倒入B'
+        self.cupB['stock'] = self.cupA['stock'] - (self.cupA['stock'] - self.cupB['volume'])
+        self.cupA['stock'] = self.cupA['stock'] - self.cupB['volume']
+        self.logVolume()
+
+        print '3. 清空B，A倒入B'
+        self.cupB['stock'] = 0
+        self.cupB['stock'] = self.cupA['stock']
+        self.cupA['stock'] = self.cupA['stock'] - self.cupB['stock']
+        self.logVolume()
+
+        print '4. 倒满A'
+        self.cupA['stock'] = self.cupA['volume']
+        self.logVolume()
+
+        print '5. A倒入B'
+        difB = self.cupB['volume'] - self.cupB['stock'] #
+        self.cupB['stock'] = self.cupB['stock'] + (difB)
+        self.cupA['stock'] = self.cupA['stock'] - (difB)
+        self.logVolume()
+
+
+if __name__ == '__main__':
+    cupGame = cupGame()
+    cupGame.get3L()
+    #cupGame.get2L()
